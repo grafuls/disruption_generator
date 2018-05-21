@@ -13,11 +13,12 @@ import time
 from random import choices, randint
 
 
-""" TODO:
+""" Wishlist:
 This is lazy implementation of this utility. If we find it useful, we might want to:
-- Give user the option to run indefinitely and only insert target msg based on keyboard interrupt 
 - Provide a template for fake log messages (e.g. with timestamps)
 - Let users define their own templates
+- There's probably better solution than catching KeyboardInterrupt for indefinite running
+- Display content of log file while running this script
 """
 
 
@@ -51,24 +52,30 @@ def main():
                              'specified in --seconds has passed.')
     parser.add_argument('-s', '--seconds', action='store', default=5, type=int,
                         help='Target message will be sent to the log file in the next iteration'
-                             'after this many seconds have passed.')
+                             'after this many seconds have passed. If you set it to 0, target'
+                             'message will never be sent unless you interrput script execution'
+                             'by pressing Ctrl+C.')
 
     args = parser.parse_args()
 
     log_file = pathlib.Path(args.log_file)
-    start_time = time.time()
 
     with open(file=log_file, mode='a' if args.append else 'w', buffering=1) as f:
-        time_elapsed = time.time() - start_time
-        while args.seconds > time_elapsed:
-            f.write(generate_random_string())
-            if args.randomize:
-                time_to_sleep = randint(0, 1000 * args.max_interval) / 1000
-            else:
-                time_to_sleep = args.max_interval
-            time.sleep(time_to_sleep)
-            time_elapsed = time.time() - start_time
-        f.write(args.target_msg + '\n')
+        start_time = time.time()
+        try:
+            while True:
+                f.write(generate_random_string())
+                if args.randomize:
+                    time_to_sleep = randint(0, 1000 * args.max_interval) / 1000
+                else:
+                    time_to_sleep = args.max_interval
+                time.sleep(time_to_sleep)
+                time_expired = args.seconds < time.time() - start_time
+                if args.seconds != 0 and time_expired:
+                    break
+            f.write(args.target_msg + '\n')
+        except KeyboardInterrupt:
+            f.write(args.target_msg + '\n')
 
 
 if __name__ == '__main__':
