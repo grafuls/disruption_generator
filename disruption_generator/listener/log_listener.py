@@ -3,7 +3,6 @@ import shlex
 import subprocess
 import logging
 import os
-import sys
 import time
 from rrmngmnt.host import Host as HostResource
 from rrmngmnt.user import User
