@@ -25,10 +25,13 @@ This is lazy implementation of this utility. If we find it useful, we might want
 TARGET_MSG = "This one!"
 
 
-def generate_random_string(max_length=80):
+def generate_random_string(target_msg, max_length=80):
     """Generate random string of letters and digits that is between 1 and max_length chars long."""
-    random_chars = choices(string.ascii_letters + string.digits, k=randint(1, max_length))
-    return ''.join(random_chars) + '\n'
+    random_str = target_msg
+    while target_msg in random_str:  # Make sure target_msg in not included in generated string
+        random_chars = choices(string.ascii_letters + string.digits, k=randint(1, max_length))
+        random_str = ''.join(random_chars) + '\n'
+    return random_str
 
 
 def main():
@@ -64,7 +67,7 @@ def main():
         start_time = time.time()
         try:
             while True:
-                f.write(generate_random_string())
+                f.write(generate_random_string(target_msg=args.target_msg))
                 if args.randomize:
                     time_to_sleep = randint(0, 1000 * args.max_interval) / 1000
                 else:
