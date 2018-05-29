@@ -93,6 +93,42 @@ class LogListener:
                 )
         return rc
 
+    @staticmethod
+    def follow(file_to_follow):
+        """
+        Read lines from file in almost real-time fashion.
+        Args:
+            file_to_follow: _io.TextIOWrapper object obtained by open() builtin
+        """
+        file_to_follow.seek(0, 2)
+        while True:
+            line = file_to_follow.readline()
+            if not line:
+                # TODO: Might be solved by: https://pypi.org/project/inotify/
+                time.sleep(0.1)
+                continue
+            yield line
+
+    def follow_local_file(self, file_to_watch, regex):
+        """
+        This is different implementation of watch_for_local_changes.
+        If am not 100 % sure that this is the correct way to go.
+        Therefore keeping both implementations for now.
+        """
+        start_time = time.time()
+        with open(file_to_watch) as f:
+            loglines = self.follow(f)
+            for line in loglines:
+                print('LISTENER: {}'.format(line))
+                if self.time_out > time.time() - start_time:
+                    match = re.search(regex, line)
+                    if match:
+                        logger.info("Found match (%s) in file %s",
+                                    match.string.strip(), file_to_watch)
+                        return match
+                else:
+                    return False
+
     def watch_for_remote_changes(self, files_to_watch, regex):
         """
         Method that runs "tail -f 'file_name'" command remotely.
@@ -159,7 +195,7 @@ class LogListener:
                     return ''
             try:
                 line = f.stdout.readline()
-                recv = "".join([recv, line])
+                recv = "".join([recv, str(line)])
                 reg = re.search(regex, recv)
 
                 if reg:
@@ -191,7 +227,8 @@ class LogListener:
 
         else:
             logger.info("on local machine")
-            return self.watch_for_local_changes(files_to_watch, regex)
+            return self.follow_local_file(files_to_watch, regex)
+            # return self.watch_for_local_changes(files_to_watch, regex)
 
 
 def watch_logs(
