@@ -10,7 +10,28 @@ import argparse
 
 DEFAULT_TIMEOUT = 240
 
-logger = logging.getLogger("log_listener")
+#####################################
+# Set up logging for this component #
+#####################################
+
+# TODO: Generate this based on the module's name or the main class of component
+LOGGER_NAME = 'log_listener'
+
+# TODO: Let user set log level for file/console via config file and/or CLI args
+logger = logging.getLogger(LOGGER_NAME)
+logger.setLevel(logging.DEBUG)
+
+# Set logging to file
+log_file_handler = logging.FileHandler('{}.{}'.format(LOGGER_NAME, 'log'))
+log_file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+
+# Set logging to console
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+console_handler.setLevel(logging.INFO)
+
+logger.addHandler(log_file_handler)
+logger.addHandler(console_handler)
 
 
 class LogListener:
@@ -114,19 +135,24 @@ class LogListener:
         This is different implementation of watch_for_local_changes.
         If am not 100 % sure that this is the correct way to go.
         Therefore keeping both implementations for now.
+
+        Returns:
+            re.Match object if regex was found, False otherwise
         """
         start_time = time.time()
         with open(file_to_watch) as f:
             loglines = self.follow(f)
             for line in loglines:
-                print('LISTENER: {}'.format(line))
+                logger.debug('Looking for "%s" in line "%s" in file %s',
+                             regex, line.strip(), file_to_watch)
                 if self.time_out > time.time() - start_time:
                     match = re.search(regex, line)
                     if match:
-                        logger.info("Found match (%s) in file %s",
+                        logger.info('Found match (%s) in file %s',
                                     match.string.strip(), file_to_watch)
                         return match
                 else:
+                    logger.info('No match for "%s" found until timeout', regex)
                     return False
 
     def watch_for_remote_changes(self, files_to_watch, regex):
@@ -340,8 +366,6 @@ def main():
           (e.g. -t 3)
 
     """
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-
     usage = "Usage: %prog [options] arg1 arg2"
     parser = argparse.ArgumentParser(description='this function can be used '
                                                  'to watch log file for '
