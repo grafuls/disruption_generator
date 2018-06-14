@@ -3,9 +3,6 @@ Disruption Generator
 ====================
 
 
-.. image:: https://img.shields.io/pypi/v/disruption_generator.svg
-        :target: https://pypi.python.org/pypi/disruption_generator
-
 .. image:: https://img.shields.io/travis/grafuls/disruption_generator.svg
         :target: https://travis-ci.org/grafuls/disruption_generator
 
