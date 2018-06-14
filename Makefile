@@ -54,7 +54,7 @@ lint: ## check style with flake8
 	flake8 disruption_generator tests
 
 test: ## run tests quickly with the default Python
-	py.test
+	pipenv run py.test tests
 
 test-all: ## run tests on every Python version with tox
 	tox
@@ -86,3 +86,8 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+init:
+	pip install pipenv
+	pipenv install --dev
+
