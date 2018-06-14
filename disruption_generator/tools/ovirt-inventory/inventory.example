@@ -1,0 +1,31 @@
+[engine:vars]
+ovirt_engine_type=ovirt-engine
+ovirt_engine_version=4.2
+ovirt_engine_dwh=True
+ovirt_engine_hostname=ovirt-engine.example.com
+ovirt_engine_organization=example.com
+ovirt_engine_admin_password=${ENGINE_PASS}
+ovirt_engine_api_url=https://ovirt-engine.example.com/ovirt-engine/api
+ovirt_engine_username=admin@internal
+engine_coverage_product=rhv
+
+[engine]
+ovirt-engine.example.com os=rhel-7.5
+
+[rhel-hypervisors]
+hypervisor-01.example.com os=RHEL-7.5 nested=False
+hypervisor-02.example.com os=RHEL-7.5 nested=False
+hypervisor-03.example.com os=RHEL-7.5 nested=False
+
+[rhvh-hypervisors]
+
+
+[hypervisors:children]
+rhel-hypervisors
+rhvh-hypervisors
+
+[database]
+ovirt-engine.example.com os=rhel-7.5
+
+[dwh]
+ovirt-engine.example.com os=rhel-7.5

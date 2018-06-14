@@ -1,0 +1,5 @@
+  - name: $name
+    address: $address
+    os: $os_version
+    password: "{{ root_passwd }}"
+    cluster: "$cluster"

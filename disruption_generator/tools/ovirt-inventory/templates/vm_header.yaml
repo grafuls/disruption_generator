@@ -1,0 +1,13 @@
+
+###############################################################################
+# vm_profile_nfs - change manually
+
+vm_profile_nfs:
+  cluster: "{{ clusters[0].name }}"
+  template: "{{ template_name }}"
+  memory: 1GiB
+  cores: 1
+  sockets: 1
+  state: stopped
+  storage_domain: nfs_0
+

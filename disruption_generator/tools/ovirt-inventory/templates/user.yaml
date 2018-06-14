@@ -1,0 +1,8 @@
+  - name: $principal
+    authz_name: $authz_name
+    password: "{{ usr_passwd }}"
+    valid_to: "2020-01-01 00:00:00Z"
+    attributes:
+      firstName: "$name"
+      department: "$department"
+

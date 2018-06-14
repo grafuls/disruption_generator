@@ -1,0 +1,3 @@
+  - name: $name
+    tag: "$tag"
+    profile: "{{ vm_profile_nfs }}"

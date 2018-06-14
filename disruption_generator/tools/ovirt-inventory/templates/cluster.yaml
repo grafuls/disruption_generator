@@ -1,0 +1,4 @@
+  - name: $name
+    cpu_type: "$cpu_type"
+    compatibility_version: "$version"
+    mac_pool: "$mac_pool_name"

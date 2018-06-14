@@ -1,0 +1,18 @@
+---
+- disrupt_action:
+    - name: Kill services on VM start
+      listener:
+        re: "*Start VM*"
+        log: /var/log/ovirt-engine/engine.log
+        host: engine
+      trigger:
+        - restart_service:
+            name: vdsmd
+            target_host: rhev-hypervisors
+            wait: 10
+            timeout: 10
+        - restart_service:
+            name: ovirt-engine-dwhd
+            target_host: engine
+            wait: 10
+            timeout: 10

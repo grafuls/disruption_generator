@@ -1,0 +1,9 @@
+
+###############################################################################
+# extra storages - change manually
+extra_nfs_storage_domains: []
+
+extra_iscsi_storage_domains: []
+
+extra_glusterfs_storage_domains: []
+

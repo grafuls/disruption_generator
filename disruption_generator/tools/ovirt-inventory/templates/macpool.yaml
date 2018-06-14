@@ -1,0 +1,2 @@
+  - mac_pool_name: "$name"
+    mac_pool_ranges:

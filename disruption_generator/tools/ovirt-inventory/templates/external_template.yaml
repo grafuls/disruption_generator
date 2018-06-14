@@ -1,0 +1,16 @@
+
+###############################################################################
+# external templates - change manually
+# e.g.:
+#   - name: "{{ template_name }}"
+#    image_provider: rhevm-qe-brq-glance
+#    image_disk: rhel7.4_ovirt4.2_guest_disk
+#    storage_domain: nfs_0
+#    cluster: golden_env_mixed_1
+
+external_templates: []
+
+# list of domains to copy the template disks to.
+# role: add-nic-to-template-and-template-disks
+destination_storage_domains: []
+

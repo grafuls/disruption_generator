@@ -1,0 +1,15 @@
+###############################################################################
+
+gluster-replica: {}
+
+###############################################################################
+
+extra_configuration_options:
+  not_4_nics_hosts: $not_4_nics_hosts
+  not_6_nics_hosts: $not_6_nics_hosts
+  no_full_sriov_support: $no_full_sriov_support
+  no_semi_sriov_support: $no_semi_sriov_support
+  no_jumbo_frame_support: $no_jumbo_frame_support
+  no_extra_bond_mode_support: $no_extra_bond_mode_support
+
+###############################################################################

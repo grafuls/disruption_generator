@@ -1,0 +1,4 @@
+    username: "$username"
+    password: "{{ glance_admin_passwd }}"
+    tenant: "$tenant_name"
+    auth_url: "$authentication_url"

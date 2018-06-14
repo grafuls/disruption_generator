@@ -1,0 +1,2 @@
+  - name: $name
+    authz_name: $authz_name
