@@ -102,7 +102,7 @@ ENV/
 .mypy_cache/
 
 # Pipenv
-Pipenv.lock
+Pipfile.lock
 
 # development
 .idea/
