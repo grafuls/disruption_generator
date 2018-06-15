@@ -1,14 +1,16 @@
 import attr
-import config
 import logging
-from utils import Action, Listener, Disruption
 import yaml
 import zope.interface
+
+from . import config
+from .utils import Action, Listener, Disruption
+from zope.interface import implementer
 
 logger = logging.getLogger(__name__)
 
 
-class IParser(zope.interface):
+class IParser(zope.interface.Interface):
     """
     Parser for experiments with disruptive actions definitions.
     """
@@ -22,8 +24,9 @@ class IParser(zope.interface):
         """
 
 
+@implementer(IParser)
 @attr.s(hash=True)
-class Parser(IParser):
+class ExperimentParser(object):
 
     yaml_path = attr.ib()
 
@@ -36,7 +39,7 @@ class Parser(IParser):
             Args:
                 element_listener (dict): yaml info of listener
             Returns:
-                Listener: objectwith listener info
+                Listener: object with listener info
             """
 
             re = element_listener['re']
@@ -56,21 +59,22 @@ class Parser(IParser):
             """
 
             _actions = []
-            for action in element_trigger:
-                key = action.keys()[0]
-                _name = action[key][config.NAME_STR]
-                params = action[key]['params']
-                target_host = action[key]['target_host']
-                wait = action[key]['wait']
-                timeout = action[key]['timeout']
+            for trigger in element_trigger:
+                key = 'action'
+                _name = trigger[key][config.NAME_STR]
+                params = trigger[key]['params']
+                target_host = trigger[key]['target_host']
+                wait = trigger[key]['wait']
+                timeout = trigger[key]['timeout']
 
-                action = Action(name=_name, params=params, target_host=target_host, wait=wait, timeout=timeout)
-                _actions.append(action)
+                trigger = Action(name=_name, params=params, target_host=target_host, wait=wait, timeout=timeout)
+                _actions.append(trigger)
             return _actions
 
         doc = None
         try:
             with open(self.yaml_path, 'r') as f:
+                import ipdb;ipdb.set_trace()
                 data = f.read()
                 doc = yaml.safe_load(data)
         except IOError as e:
