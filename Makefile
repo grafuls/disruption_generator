@@ -54,7 +54,7 @@ lint: ## check style with flake8
 	flake8 disruption_generator tests
 
 test: ## run tests quickly with the default Python
-	pipenv run py.test tests
+	tox -e py36
 
 test-all: ## run tests on every Python version with tox
 	tox
