@@ -7,7 +7,7 @@ python:
   - 3.4
 
 # Command to install dependencies
-install: "make"
+install: "make install"
 
 # Command to run tests, e.g. python setup.py test
 script:
