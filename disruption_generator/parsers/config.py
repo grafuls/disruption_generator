@@ -3,7 +3,7 @@
 """
 Helper config
 """
-# parser
+# parsers
 DISRUPT_ACTION_STR = 'disrupt_action'
 NAME_STR = 'name'
 LISTENER_STR = 'listener'

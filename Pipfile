@@ -25,6 +25,9 @@ configparser = "*"
 pyyaml = "*"
 "jinja2" = "*"
 requests = "*"
+six = "*"
+"zope.interface" = "==4.4.3"
+attrs = "==17.4.0"
 
 [requires]
 python_version = "3.6"
