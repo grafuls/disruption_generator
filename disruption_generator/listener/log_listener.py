@@ -15,19 +15,19 @@ DEFAULT_TIMEOUT = 240
 #####################################
 
 # TODO: Generate this based on the module's name or the main class of component
-LOGGER_NAME = 'log_listener'
+LOGGER_NAME = "log_listener"
 
 # TODO: Let user set log level for file/console via config file and/or CLI args
 logger = logging.getLogger(LOGGER_NAME)
 logger.setLevel(logging.DEBUG)
 
 # Set logging to file
-log_file_handler = logging.FileHandler('{}.{}'.format(LOGGER_NAME, 'log'))
-log_file_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+log_file_handler = logging.FileHandler("{}.{}".format(LOGGER_NAME, "log"))
+log_file_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 
 # Set logging to console
 console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+console_handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
 console_handler.setLevel(logging.INFO)
 
 logger.addHandler(log_file_handler)
@@ -43,9 +43,7 @@ class LogListener:
     on your local machine or on a remote machine
     """
 
-    def __init__(
-        self, ip_for_files, username, password, time_out=DEFAULT_TIMEOUT
-    ):
+    def __init__(self, ip_for_files, username, password, time_out=DEFAULT_TIMEOUT):
         self.ssh = None
         self.channel = None
         self.executor = None
@@ -74,8 +72,12 @@ class LogListener:
             self.channel = transport.open_session()
 
     def execute_command(
-        self, run_locally, command_to_exec, ip_for_execute_command=None,
-        remote_username=None, remote_password=None
+        self,
+        run_locally,
+        command_to_exec,
+        ip_for_execute_command=None,
+        remote_username=None,
+        remote_password=None,
     ):
         """
         Executes command on a local or remote machine -
@@ -89,16 +91,14 @@ class LogListener:
                     ip_for_execute_command, remote_username, remote_password
                 )
             logger.info(
-                "run command %s on ip %s", command_to_exec,
-                ip_for_execute_command
+                "run command %s on ip %s", command_to_exec, ip_for_execute_command
             )
             rc, out, err = self.executor.run_cmd(
                 cmd=shlex.split(command_to_exec), io_timeout=90
             )
             assert rc, (
-                "Failed to execute command %s with err %s and output %s" % (
-                    command_to_exec, err, out
-                )
+                "Failed to execute command %s with err %s and output %s"
+                % (command_to_exec, err, out)
             )
         else:
             try:
@@ -109,9 +109,7 @@ class LogListener:
                 # when no errors
                 rc = not bool(os.system(command_to_exec))
             except RuntimeError as ex:
-                logger.info(
-                    "Can't run command %s, exception: %s", command_to_exec, ex
-                )
+                logger.info("Can't run command %s, exception: %s", command_to_exec, ex)
         return rc
 
     @staticmethod
@@ -143,13 +141,20 @@ class LogListener:
         with open(file_to_watch) as f:
             loglines = self.follow(f)
             for line in loglines:
-                logger.debug('Looking for "%s" in line "%s" in file %s',
-                             regex, line.strip(), file_to_watch)
+                logger.debug(
+                    'Looking for "%s" in line "%s" in file %s',
+                    regex,
+                    line.strip(),
+                    file_to_watch,
+                )
                 if self.time_out > time.time() - start_time:
                     match = re.search(regex, line)
                     if match:
-                        logger.info('Found match (%s) in file %s',
-                                    match.string.strip(), file_to_watch)
+                        logger.info(
+                            "Found match (%s) in file %s",
+                            match.string.strip(),
+                            file_to_watch,
+                        )
                         return match
                 else:
                     logger.info('No match for "%s" found until timeout', regex)
@@ -190,7 +195,7 @@ class LogListener:
                 self.channel.close()
                 self.ssh.close()
                 raise Exception("close connections")
-        return ''
+        return ""
 
     def watch_for_local_changes(self, files_to_watch, regex):
         """
@@ -206,19 +211,24 @@ class LogListener:
         start_time = time.time()
         try:
             logger.info("run 'tail -f' command on file/s %s", files_to_watch)
-            f = subprocess.Popen(['tail', '-F', files_to_watch,
-                                  '| stdbuf -o0'],
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
+            f = subprocess.Popen(
+                ["tail", "-F", files_to_watch, "| stdbuf -o0"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
 
         except RuntimeError as ex:
-            logger.info("Can't run command %s on %s, exception is %s", 'tail',
-                        files_to_watch, ex)
+            logger.info(
+                "Can't run command %s on %s, exception is %s",
+                "tail",
+                files_to_watch,
+                ex,
+            )
         recv = ""
         while True:
             if self.time_out:
                 if self.time_out < time.time() - start_time:
-                    return ''
+                    return ""
             try:
                 line = f.stdout.readline()
                 recv = "".join([recv, str(line)])
@@ -230,7 +240,7 @@ class LogListener:
 
             except KeyboardInterrupt:
                 raise RuntimeError("Caught control-C")
-        return ''
+        return ""
 
     def watch_for_changes(self, run_locally, files_to_watch, regex):
         """
@@ -258,9 +268,16 @@ class LogListener:
 
 
 def watch_logs(
-    files_to_watch, regex, command_to_exec=None, time_out=None,
-    ip_for_files=None, username=None, password=None,
-    ip_for_execute_command=None, remote_username=None, remote_password=None
+    files_to_watch,
+    regex,
+    command_to_exec=None,
+    time_out=None,
+    ip_for_files=None,
+    username=None,
+    password=None,
+    ip_for_execute_command=None,
+    remote_username=None,
+    remote_password=None,
 ):
     """
     When importing this module, this function can be used to watch log file
@@ -307,19 +324,19 @@ def watch_logs(
     listener = LogListener(ip_for_files, username, password, time_out)
 
     cmd_rc = None
-    found_regex = listener.watch_for_changes(run_locally,
-                                             files_to_watch,
-                                             regex)
+    found_regex = listener.watch_for_changes(run_locally, files_to_watch, regex)
 
     if found_regex:
         if command_to_exec:
             cmd_rc = listener.execute_command(
-                run_locally, command_to_exec, ip_for_execute_command,
-                remote_username, remote_password
+                run_locally,
+                command_to_exec,
+                ip_for_execute_command,
+                remote_username,
+                remote_password,
             )
     else:
-        logger.debug("Didn't find regex %s in files %s" % (regex,
-                                                           files_to_watch))
+        logger.debug("Didn't find regex %s in files %s" % (regex, files_to_watch))
     return found_regex, cmd_rc
 
 
@@ -367,45 +384,76 @@ def main():
 
     """
     usage = "Usage: %prog [options] arg1 arg2"
-    parser = argparse.ArgumentParser(description='this function can be used '
-                                                 'to watch log file for '
-                                                 'specific event ,'
-                                                 'and executes commands.')
+    parser = argparse.ArgumentParser(
+        description="this function can be used "
+        "to watch log file for "
+        "specific event ,"
+        "and executes commands."
+    )
 
-    parser.add_argument("-m", "--machine", action="store", dest="ip", nargs=3,
-                        help="if the file is on remote machine then '-m' "
-                             "followed by ip,username & password",
-                        default=(None, None, None))
+    parser.add_argument(
+        "-m",
+        "--machine",
+        action="store",
+        dest="ip",
+        nargs=3,
+        help="if the file is on remote machine then '-m' "
+        "followed by ip,username & password",
+        default=(None, None, None),
+    )
 
-    parser.add_argument("-f", "--file", action="append", dest="files_to_watch",
-                        help="option that followed by "
-                             "the absolute path of the "
-                             "file that need to watch for, each file should "
-                             "be preceded by -f separately",
-                        required=True,
-                        default=[])
+    parser.add_argument(
+        "-f",
+        "--file",
+        action="append",
+        dest="files_to_watch",
+        help="option that followed by "
+        "the absolute path of the "
+        "file that need to watch for, each file should "
+        "be preceded by -f separately",
+        required=True,
+        default=[],
+    )
 
-    parser.add_argument("-r", "--regex", action="store", type=re.compile,
-                        dest="regex",
-                        required=True,
-                        help="option for regex (e.g. -r <REGULAR_EXPRESSION>)")
+    parser.add_argument(
+        "-r",
+        "--regex",
+        action="store",
+        type=re.compile,
+        dest="regex",
+        required=True,
+        help="option for regex (e.g. -r <REGULAR_EXPRESSION>)",
+    )
 
-    parser.add_argument("-c", "--command", action="store",
-                        dest="command_to_exec",
-                        required=True,
-                        help="followed by the command that should be executed "
-                             "in case of log event")
+    parser.add_argument(
+        "-c",
+        "--command",
+        action="store",
+        dest="command_to_exec",
+        required=True,
+        help="followed by the command that should be executed " "in case of log event",
+    )
 
-    parser.add_argument("-M", "--Machine", action="store",
-                        dest="ip_for_execute_command", nargs=3,
-                        help="in case that the command should executes on "
-                             "different machine , "
-                             "this option followed by IP,username & password",
-                        default=(None, None, None))
+    parser.add_argument(
+        "-M",
+        "--Machine",
+        action="store",
+        dest="ip_for_execute_command",
+        nargs=3,
+        help="in case that the command should executes on "
+        "different machine , "
+        "this option followed by IP,username & password",
+        default=(None, None, None),
+    )
 
-    parser.add_argument("-t", "--timeout", action="store", type=int,
-                        dest="time_out",
-                        help="limited time for watching")
+    parser.add_argument(
+        "-t",
+        "--timeout",
+        action="store",
+        type=int,
+        dest="time_out",
+        help="limited time for watching",
+    )
 
     options = parser.parse_args()
 
@@ -424,20 +472,24 @@ def main():
         ip, username, password = options.ip
 
     if options.ip_for_execute_command:
-        ip_for_execute_command, remote_username, remote_password = \
-            options.ip_for_execute_command
+        ip_for_execute_command, remote_username, remote_password = options.ip_for_execute_command
 
     logger.info("start watching...")
-    watch_logs(files_to_watch, regex.pattern, command_to_exec,
-               time_out=time_out,
-               ip_for_files=ip, username=username,
-               password=password,
-               ip_for_execute_command=ip_for_execute_command,
-               remote_username=remote_username,
-               remote_password=remote_password)
+    watch_logs(
+        files_to_watch,
+        regex.pattern,
+        command_to_exec,
+        time_out=time_out,
+        ip_for_files=ip,
+        username=username,
+        password=password,
+        ip_for_execute_command=ip_for_execute_command,
+        remote_username=remote_username,
+        remote_password=remote_password,
+    )
 
     logger.info("Done !!!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

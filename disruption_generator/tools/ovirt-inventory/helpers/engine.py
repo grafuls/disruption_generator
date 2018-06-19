@@ -19,9 +19,7 @@ class Engine:
     def __init__(self, config, server):
         self.config = config
         self.host = Host(server)
-        self.host.users.append(User(
-            config['ssh']['USER'], config['ssh']['PASSWORD']
-        ))
+        self.host.users.append(User(config["ssh"]["USER"], config["ssh"]["PASSWORD"]))
 
     def run(self, command):
         """
@@ -34,20 +32,20 @@ class Engine:
         """
         result, out, err = self.host.executor().run_cmd(command)
         if result == 0 and out:
-            return out.split('\n')
+            return out.split("\n")
         else:
             if not err and not out:
-                err = 'No output'
-            raise EngineException('command `{cmd}`: {err}'.format(
-                cmd=' '.join(command), err=err
-            ))
+                err = "No output"
+            raise EngineException(
+                "command `{cmd}`: {err}".format(cmd=" ".join(command), err=err)
+            )
 
     def get_hostname(self):
         """
         Get engine's fqdn
         """
-        for hostname in self.host.network.hostname.split('\n'):
-            if 'localhost' not in hostname:
+        for hostname in self.host.network.hostname.split("\n"):
+            if "localhost" not in hostname:
                 return hostname
 
     def get_release_info(self):
@@ -77,32 +75,31 @@ class EngineData:
         """
         data = {}
         release_info = self.engine.get_release_info()
-        data['os'] = '{os}-{version}'.format(
-            os=release_info['ID'],
-            version=release_info['VERSION_ID']
+        data["os"] = "{os}-{version}".format(
+            os=release_info["ID"], version=release_info["VERSION_ID"]
         )
-        data['arch'] = self.engine.run(['uname', '-i'])[0]
-        data['fqdn'] = self.engine.get_hostname()
+        data["arch"] = self.engine.run(["uname", "-i"])[0]
+        data["fqdn"] = self.engine.get_hostname()
 
         r = re.compile(
-            '({})'.format('|'.join(engine_conf.DATABASE_SETUP_FILES_KEYS)),
-            re.IGNORECASE
+            "({})".format("|".join(engine_conf.DATABASE_SETUP_FILES_KEYS)),
+            re.IGNORECASE,
         )
         for conf_item in engine_conf.DATABASE_SETUP_FILES:
             out = self.engine.run(
                 [
-                    'grep',
-                    conf_item['regex'],
-                    '{etc_dir}/{conf_file}'.format(
-                        etc_dir=self.config['other']['ENGINE_ETC_DIR'],
-                        conf_file=conf_item['file']
-                    )
+                    "grep",
+                    conf_item["regex"],
+                    "{etc_dir}/{conf_file}".format(
+                        etc_dir=self.config["other"]["ENGINE_ETC_DIR"],
+                        conf_file=conf_item["file"],
+                    ),
                 ]
             )
             for line in filter(r.search, out):
-                key, value = line.strip().split('=')
-                data_key = key.replace(conf_item['regex'], '').lower()
-                data[conf_item['key_prefix'] + data_key] = value.strip()[1:-1]
+                key, value = line.strip().split("=")
+                data_key = key.replace(conf_item["regex"], "").lower()
+                data[conf_item["key_prefix"] + data_key] = value.strip()[1:-1]
 
         return data
 
@@ -111,5 +108,6 @@ class EngineException(Exception):
     """
     Class for Engine exceptions
     """
+
     def __str__(self):
-        return '[Engine] {}'.format(self.message)
+        return "[Engine] {}".format(self.message)

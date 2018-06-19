@@ -12,13 +12,9 @@ class Resource:
     """
     Trigger class execute disruptive actions remotely via ssh
     """
+
     def __init__(
-            self,
-            target,
-            username,
-            password,
-            wait=DEFAULT_WAIT,
-            timeout=DEFAULT_TIMEOUT
+        self, target, username, password, wait=DEFAULT_WAIT, timeout=DEFAULT_TIMEOUT
     ):
         self.ssh = None
         self.channel = None
@@ -51,12 +47,7 @@ class Resource:
                 transport = self.ssh._ssh.get_transport()
             self.channel = transport.open_session()
 
-    def execute_command(
-            self,
-            command_to_exec,
-            remote_username,
-            remote_password
-    ):
+    def execute_command(self, command_to_exec, remote_username, remote_password):
         """
         Executes command on a local or remote machine -
         if "ip_for_execute_command" is None then command will be executed on
@@ -64,18 +55,11 @@ class Resource:
         """
         rc = None
         if self.target:
-            self.initiate_executor(
-                self.target, remote_username, remote_password
-            )
-        logger.info(
-            "run command %s on resource %s", command_to_exec,
-            self.target
-        )
-        rc, out, err = self.executor.run_cmd(
-            cmd=command_to_exec, io_timeout=90
-        )
+            self.initiate_executor(self.target, remote_username, remote_password)
+        logger.info("run command %s on resource %s", command_to_exec, self.target)
+        rc, out, err = self.executor.run_cmd(cmd=command_to_exec, io_timeout=90)
         assert rc, (
-            "Failed to execute command %s with err %s and output %s" %
-            (command_to_exec, err, out)
+            "Failed to execute command %s with err %s and output %s"
+            % (command_to_exec, err, out)
         )
         return rc

@@ -3,5 +3,5 @@
 """Top-level package for Disruption Generator."""
 
 __author__ = """Gonzalo Rafuls"""
-__email__ = 'grafuls@gmail.com'
-__version__ = '0.1.0'
+__email__ = "grafuls@gmail.com"
+__version__ = "0.1.0"
