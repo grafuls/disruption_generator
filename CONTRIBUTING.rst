@@ -64,11 +64,12 @@ Ready to contribute? Here's how to set up `disruption_generator` for local devel
 
     $ git clone git@github.com:your_name_here/disruption_generator.git
 
-3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
+3. Install your local copy into a pipenv virtualenv. Assuming you have pipenv installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv disruption_generator
     $ cd disruption_generator/
-    $ python setup.py develop
+    $ pipenv install --dev
+    $ pipenv shell
+    $ python setup.py install
 
 4. Create a branch for local development::
 
@@ -102,7 +103,7 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 2.7, 3.4, 3.5 and 3.6, and for PyPy. Check
+3. The pull request should work for Python 3.4, 3.5 and 3.6. Check
    https://travis-ci.org/grafuls/disruption_generator/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
