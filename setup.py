@@ -1,18 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Note: To use the 'upload' functionality of this file, you must:
+#   $ pip install twine
+
 """The setup script."""
 
-from setuptools import setup, find_packages
+import io
+import os
+import sys
 
-with open("README.rst") as readme_file:
-    readme = readme_file.read()
+from setuptools import setup, find_packages, Command
 
-with open("HISTORY.rst") as history_file:
-    history = history_file.read()
+# Package meta-data.
+NAME = "disruption_generator"
+DESCRIPTION = "Providing an extendable and easy to use tool for developers and QE to ensure the highest resilience " \
+              "of their products by disrupting normal workflows during test execution."
+URL = "https://github.com/grafuls/disruption_generator"
+EMAIL = "grafuls@gmail.com"
+AUTHOR = "Gonzalo Rafuls"
+REQUIRES_PYTHON = ">=3.4.0"
+VERSION = "0.1.0"
 
-requirements = [
-    "Click>=6.0",
+# What packages are required for this module to be executed?
+REQUIRED = [
+    "click>=6.0",
     "python-rrmngmnt",
     "configparser",
     "pyyaml",
@@ -23,13 +35,76 @@ requirements = [
     "attrs",
 ]
 
-setup_requirements = ["pytest-runner"]
+# The rest you shouldn't have to touch too much :)
+# ------------------------------------------------
+# Except, perhaps the License and Trove Classifiers!
+# If you do change the License, remember to change the Trove Classifier for that!
 
-test_requirements = ["pytest"]
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Import the README and use it as the long-description.
+# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
+    README = "\n" + f.read()
+with io.open(os.path.join(here, "HISTORY.rst"), encoding="utf-8") as f:
+    HISTORY = "\n" + f.read()
+
+
+SETUP_REQUIREMENTS = ["pytest-runner"]
+
+TEST_REQUIREMENTS = ["pytest"]
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = "Build and publish the package."
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print("\033[1m{0}\033[0m".format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status("Removing previous builds…")
+            rmtree(os.path.join(here, "dist"))
+        except OSError:
+            pass
+
+        self.status("Building Source and Wheel (universal) distribution…")
+        os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
+
+        self.status("Uploading the package to PyPi via Twine…")
+        os.system("twine upload dist/*")
+
+        self.status("Pushing git tags…")
+        os.system("git tag v{0}".format(about["__version__"]))
+        os.system("git push --tags")
+
+        sys.exit()
+
 
 setup(
-    author="Gonzalo Rafuls",
-    author_email="grafuls@gmail.com",
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=README + "\n\n" + HISTORY,
+    author=AUTHOR,
+    author_email=EMAIL,
+    python_requires=REQUIRES_PYTHON,
+    url=URL,
+    packages=find_packages(include=["disruption_generator"], exclude=("tests",)),
+    install_requires=REQUIRED,
+    include_package_data=True,
+    license="Apache Software License 2.0",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
@@ -40,23 +115,13 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
     ],
-    description="Providing an extendable and easy to use tool for developers "
-    "and QE to ensure the highest resilience of their products by "
-    "disrupting normal workflows during test execution.",
     entry_points={
         "console_scripts": ["disruption_generator=disruption_generator.cli:main"]
     },
-    install_requires=requirements,
-    license="Apache Software License 2.0",
-    long_description=readme + "\n\n" + history,
-    include_package_data=True,
     keywords="disruption_generator",
-    name="disruption_generator",
-    packages=find_packages(include=["disruption_generator"]),
-    setup_requires=setup_requirements,
+    setup_requires=SETUP_REQUIREMENTS,
     test_suite="tests",
-    tests_require=test_requirements,
-    url="https://github.com/grafuls/disruption_generator",
-    version="0.1.0",
+    tests_require=TEST_REQUIREMENTS,
     zip_safe=False,
+    cmdclass={"upload": UploadCommand},
 )
