@@ -33,6 +33,8 @@ REQUIRED = [
     "six",
     "zope.interface",
     "attrs",
+    "asyncio",
+    'asyncssh',
 ]
 
 # The rest you shouldn't have to touch too much :)
