@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import asyncio
-import parser
+import sys
 
 """Main module."""
 
 
-async def main(loop):
-    pass
+async def main():
+    return 0
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop))
+    sys.exit(main())

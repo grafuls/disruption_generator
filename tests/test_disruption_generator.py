@@ -48,6 +48,6 @@ def event_loop():
 
 @pytest.mark.asyncio
 async def test_alistener():
-    localhost = Alistener(event_loop, 'localhost')
-    await localhost.tail('/tmp/localping')
+    localhost = Alistener(event_loop, "localhost")
+    await localhost.tail("/tmp/localping")
     await asyncio.sleep(1)

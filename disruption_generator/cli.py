@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 
 
 @click.command()
-@click.option("--experiments-path", "-e",
-              type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True),
-              help="Path to experiments yamls",
-              default="./experiments/")
-@click.option("--inventory", "-i",
-              help="Inventory file with host definitions written in Ansible fashion",
-              required=True)
+@click.option(
+    "--experiments-path",
+    "-e",
+    type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True),
+    help="Path to experiments yamls",
+    default="./experiments/",
+)
 @click.version_option(version=__version__)
-def main(experiments_path, inventory):
+def main(experiments_path):
     """Console script for disruption_generator."""
     click.echo("!!! DISRUPTION AS A SERVICE !!!")
     click.echo("!!!    USE WITH CAUTION     !!!")
@@ -33,7 +33,7 @@ def main(experiments_path, inventory):
         _loop = asyncio.get_event_loop()
         _loop.run_until_complete(execute(experiments_path, _loop))
     except (OSError, asyncssh.Error) as exc:
-        sys.exit('SSH connection failed: ' + str(exc))
+        sys.exit("SSH connection failed: " + str(exc))
 
 
 async def execute(experiments_path, _loop):
@@ -48,14 +48,20 @@ async def execute(experiments_path, _loop):
         scenario = _parser.parse()
         _scenarios.extend(scenario)
     for scenario in _scenarios:
-        alistener = Alistener(_loop, scenario.listener.target)
+        click.echo("Scenario: %s" % scenario)
+        alistener = Alistener(scenario.listener.target)
 
         for action in scenario.actions:
-            result = await alistener.tail(scenario.listener.log, scenario.listener.re, action.timeout)
+            result = await alistener.tail(
+                scenario.listener.log, scenario.listener.re, action.timeout
+            )
 
             if result:
                 trigger = Trigger(action)
-                disruption = getattr(trigger, action.name)
+                try:
+                    disruption = getattr(trigger, action.name)
+                except AssertionError as err:
+                    logger.info(err)
                 await disruption()
 
     return 0

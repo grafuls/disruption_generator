@@ -14,6 +14,7 @@ class IParser(zope.interface.Interface):
     """
     Parser for experiments with disruptive actions definitions.
     """
+
     yaml_path = zope.interface.Attribute("The path to the scenario yaml")
 
     def parse(self):
@@ -29,7 +30,6 @@ class ExperimentParser(object):
     yaml_path = attr.ib()
 
     def parse(self):
-
         def _init_listener(element_listener):
             """
             Returns listener info

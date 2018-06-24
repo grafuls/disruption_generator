@@ -20,7 +20,8 @@ class Trigger(object):
     async def run_client(self, cmd):
         async with await asyncssh.connect(self.action.target_host) as conn:
             logger.debug("Connected to %s", self.action.target_host)
-            result = await conn.run('%s %s' % (cmd, self.action.params))
+            logger.info("Running: '%s %s'" % (cmd, self.action.params))
+            result = await conn.run("%s %s" % (cmd, self.action.params))
             if result.exit_status == 0:
                 return True
             else:

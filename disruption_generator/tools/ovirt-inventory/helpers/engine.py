@@ -13,6 +13,7 @@ class Engine:
     """
     Class that gets informations and runs ssh commands on engine
     """
+
     config = None
     host = None
 
@@ -59,6 +60,7 @@ class EngineData:
     """
     Class that processes engine's data via SSH
     """
+
     engine = None
     config = None
 

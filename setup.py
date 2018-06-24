@@ -14,8 +14,7 @@ from setuptools import setup, find_packages, Command
 
 # Package meta-data.
 NAME = "disruption_generator"
-DESCRIPTION = "Providing an extendable and easy to use tool for developers and QE to ensure the highest resilience " \
-              "of their products by disrupting normal workflows during test execution."
+DESCRIPTION = "Providing an extendable and easy to use tool for developers and QE to ensure the highest resilience " "of their products by disrupting normal workflows during test execution."
 URL = "https://github.com/grafuls/disruption_generator"
 EMAIL = "grafuls@gmail.com"
 AUTHOR = "Gonzalo Rafuls"
@@ -34,7 +33,7 @@ REQUIRED = [
     "zope.interface",
     "attrs",
     "asyncio",
-    'asyncssh',
+    "asyncssh",
 ]
 
 # The rest you shouldn't have to touch too much :)

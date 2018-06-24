@@ -154,10 +154,13 @@ class YamlGenerator:
             return True, None
 
         except KeyError as err:
-            return False, str(
-                YamlTemplateException(
-                    "engine variable '{}' missing".format(err.message)
-                )
+            return (
+                False,
+                str(
+                    YamlTemplateException(
+                        "engine variable '{}' missing".format(err.message)
+                    )
+                ),
             )
         except YamlTemplateException as err:
             return False, str(err)
