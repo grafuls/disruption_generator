@@ -24,6 +24,8 @@ def test_command_line_interface():
 async def test_alistener():
     localhost = Alistener("localhost")
     async with await asyncssh.connect("localhost") as conn:
-        await conn.open_session("ping localhost >> /tmp/pinglocal")
-        result = await localhost.tail("/tmp/pinglocal", "icmp")
+        async with conn.create_process("ping localhost >> /tmp/pinglocal & sleep 5 ; kill $!") as proc:
+            await proc.stdout.readline()
+            result = await localhost.tail("/tmp/pinglocal", "icmp")
+
     assert result

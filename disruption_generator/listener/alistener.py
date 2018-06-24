@@ -27,8 +27,10 @@ class Alistener(object):
                 m = re.search(expression, output)
                 if m and m.group(0):
                     logger.debug("Found occurrance: %s", output)
+                    stdin.write("\x03")
                     return True
             logger.debug("Found no results")
+            stdin.write("\x03")
             return False
 
     async def tail(self, filepath, expression, timeout=3):
