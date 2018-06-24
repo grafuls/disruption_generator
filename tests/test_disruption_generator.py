@@ -3,12 +3,13 @@
 
 """Tests for `disruption_generator` package."""
 
+import asyncio
 import pytest
 
 from click.testing import CliRunner
 
-from disruption_generator import disruption_generator
 from disruption_generator import cli
+from disruption_generator.listener.alistener import Alistener
 
 
 @pytest.fixture
@@ -36,3 +37,17 @@ def test_command_line_interface():
     help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
     assert "--help  Show this message and exit." in help_result.output
+
+
+@pytest.yield_fixture()
+def event_loop():
+    loop = asyncio.get_event_loop()
+    yield loop
+    loop.close()
+
+
+@pytest.mark.asyncio
+async def test_alistener():
+    localhost = Alistener(event_loop, 'localhost')
+    await localhost.tail('/tmp/localping')
+    await asyncio.sleep(1)

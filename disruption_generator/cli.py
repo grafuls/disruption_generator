@@ -4,6 +4,8 @@
 import sys
 import click
 
+from disruption_generator import disruption_generator
+
 
 @click.command()
 def main(args=None):

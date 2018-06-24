@@ -19,14 +19,10 @@ class AlistenerException(Exception):
 
 
 class Alistener(object):
-    def __init__(self, hostname):
+    def __init__(self, loop, hostname):
+        self.loop = loop
         self.hostname = hostname
-        self.loop = asyncio.get_event_loop()
         self.files = []
-        try:
-            self.loop.run_forever()
-        except (OSError, asyncssh.Error) as ex:
-            raise AlistenerException('SSH connection failed: ' + str(ex))
 
     @classmethod
     async def run_client(cls, filepath):
@@ -41,6 +37,3 @@ class Alistener(object):
             self.files.append(filepath.lower())
             self.loop.create_task(self.run_client(filepath))
 
-    async def terminate(self):
-        self.loop.stop()
-        self.loop.close()

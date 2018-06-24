@@ -54,7 +54,7 @@ with io.open(os.path.join(here, "HISTORY.rst"), encoding="utf-8") as f:
 
 SETUP_REQUIREMENTS = ["pytest-runner"]
 
-TEST_REQUIREMENTS = ["pytest"]
+TEST_REQUIREMENTS = ["pytest", "pytest-asyncio"]
 
 
 class UploadCommand(Command):
