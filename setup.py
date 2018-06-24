@@ -18,7 +18,7 @@ DESCRIPTION = "Providing an extendable and easy to use tool for developers and Q
 URL = "https://github.com/grafuls/disruption_generator"
 EMAIL = "grafuls@gmail.com"
 AUTHOR = "Gonzalo Rafuls"
-REQUIRES_PYTHON = ">=3.4.0"
+REQUIRES_PYTHON = ">=3.5.0"
 VERSION = "0.1.0"
 
 # What packages are required for this module to be executed?
@@ -112,7 +112,6 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
     ],
