@@ -31,23 +31,13 @@ def test_content(response):
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
-    result = runner.invoke(cli.main)
-    assert result.exit_code == 0
-    assert "disruption_generator.cli.main" in result.output
     help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
-    assert "--help  Show this message and exit." in help_result.output
-
-
-@pytest.yield_fixture()
-def event_loop():
-    loop = asyncio.get_event_loop()
-    yield loop
-    loop.close()
+    assert "Show this message and exit." in help_result.output
 
 
 @pytest.mark.asyncio
 async def test_alistener():
-    localhost = Alistener(event_loop, "localhost")
-    await localhost.tail("/tmp/localping")
-    await asyncio.sleep(1)
+    localhost = Alistener("localhost")
+    result = await localhost.tail("/tmp/pinglocal", "icmp")
+    assert result
