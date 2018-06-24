@@ -62,10 +62,11 @@ async def execute(experiments_path, _loop):
                     disruption = getattr(trigger, action.name)
                 except AssertionError as err:
                     logger.info(err)
+                    return 1
                 await disruption()
 
     return 0
 
 
 if __name__ == "__main__":
-    main()  # pragma: no cover
+    sys.exit(main())  # pragma: no cover

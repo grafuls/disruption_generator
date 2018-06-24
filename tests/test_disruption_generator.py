@@ -3,7 +3,7 @@
 
 """Tests for `disruption_generator` package."""
 
-import asyncio
+import asyncssh
 import pytest
 
 from click.testing import CliRunner
@@ -23,5 +23,7 @@ def test_command_line_interface():
 @pytest.mark.asyncio
 async def test_alistener():
     localhost = Alistener("localhost")
-    result = await localhost.tail("/tmp/pinglocal", "icmp")
+    async with await asyncssh.connect("localhost") as conn:
+        await conn.open_session("ping localhost >> /tmp/pinglocal")
+        result = await localhost.tail("/tmp/pinglocal", "icmp")
     assert result
