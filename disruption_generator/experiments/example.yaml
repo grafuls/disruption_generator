@@ -2,13 +2,13 @@
 - disrupt_action:
     - name: Kill services on VM start
       listener:
-        re: "*Start VM*"
-        log: /var/log/ovirt-engine/engine.log
-        host: engine
+        re: mutaki
+        log: /tmp/pinglocal
+        host: localhost
       trigger:
         - action:
             name: restart_service
-            params: vdsmd
-            target_host: rhev-hypervisors
-            wait: 10
-            timeout: 10
+            params: syslog
+            target_host: localhost
+            wait: 3
+            timeout: 3

@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import asyncio
 import asyncssh
-import sys
+import re
+import time
+import logging
 
-
-class MySSHClientSession(asyncssh.SSHClientSession):
-    def data_received(self, data):
-        print(data, end='')
-
-    def connection_lost(self, exc):
-        if exc:
-            print('SSH session error: ' + str(exc), file=sys.stderr)
+logger = logging.getLogger(__name__)
 
 
 class AlistenerException(Exception):
@@ -19,21 +13,26 @@ class AlistenerException(Exception):
 
 
 class Alistener(object):
-    def __init__(self, loop, hostname):
-        self.loop = loop
+    def __init__(self, hostname):
         self.hostname = hostname
         self.files = []
 
-    @classmethod
-    async def run_client(cls, filepath):
-        conn, client = await asyncssh.create_connection(asyncssh.SSHClient, cls.hostname)
+    async def run_client(self, filepath, expression, timeout):
+        async with await asyncssh.connect(self.hostname) as conn:
+            logger.debug("Connected to %s", self.hostname)
+            stdin, stdout, stderr = await conn.open_session('tail -f %s' % filepath)
+            start = time.time()
+            while time.time() - start < timeout:
+                output = await stdout.readline()
+                m = re.search(expression, output)
+                if m and m.group(0):
+                    logger.debug("Found occurrance: %s", output)
+                    return True
+            logger.debug("Found no results")
+            return False
 
-        async with conn:
-            chan, session = await conn.create_session(MySSHClientSession, 'tail -f %s' % filepath)
-            await chan.wait_closed()
-
-    async def tail(self, filepath):
+    async def tail(self, filepath, expression, timeout=3):
         if not filepath.lower() in self.files:
             self.files.append(filepath.lower())
-            self.loop.create_task(self.run_client(filepath))
-
+            result = await self.run_client(filepath, expression, timeout)
+            return result

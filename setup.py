@@ -103,7 +103,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(include=["disruption_generator"], exclude=("tests",)),
+    packages=find_packages(exclude=("tests",)),
     install_requires=REQUIRED,
     include_package_data=True,
     license="Apache Software License 2.0",

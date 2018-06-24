@@ -1,22 +1,65 @@
 # -*- coding: utf-8 -*-
 
 """Console script for disruption_generator."""
+import asyncio
+import asyncssh
 import sys
 import click
+import logging
 
-from disruption_generator import disruption_generator
+from . import __version__
+from .parsers.experiment_parser import ExperimentParser
+from .listener.alistener import Alistener
+from .trigger.trigger import Trigger
+from os import walk, path
+
+logger = logging.getLogger(__name__)
 
 
 @click.command()
-def main(args=None):
+@click.option("--experiments-path", "-e",
+              type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True),
+              help="Path to experiments yamls",
+              default="./experiments/")
+@click.option("--inventory", "-i",
+              help="Inventory file with host definitions written in Ansible fashion",
+              required=True)
+@click.version_option(version=__version__)
+def main(experiments_path, inventory):
     """Console script for disruption_generator."""
-    click.echo(
-        "Replace this message by putting your code into "
-        "disruption_generator.cli.main"
-    )
-    click.echo("See click documentation at http://click.pocoo.org/")
+    click.echo("!!! DISRUPTION AS A SERVICE !!!")
+    click.echo("!!!    USE WITH CAUTION     !!!")
+    try:
+        _loop = asyncio.get_event_loop()
+        _loop.run_until_complete(execute(experiments_path, _loop))
+    except (OSError, asyncssh.Error) as exc:
+        sys.exit('SSH connection failed: ' + str(exc))
+
+
+async def execute(experiments_path, _loop):
+    _files = []
+    for (dirpath, dirnames, filenames) in walk(experiments_path):
+        for file in filenames:
+            _files.append(path.join(dirpath, file))
+        break  # Get's only root level directory files
+    _scenarios = []
+    for _file in _files:
+        _parser = ExperimentParser(yaml_path=_file)
+        scenario = _parser.parse()
+        _scenarios.extend(scenario)
+    for scenario in _scenarios:
+        alistener = Alistener(_loop, scenario.listener.target)
+
+        for action in scenario.actions:
+            result = await alistener.tail(scenario.listener.log, scenario.listener.re, action.timeout)
+
+            if result:
+                trigger = Trigger(action)
+                disruption = getattr(trigger, action.name)
+                await disruption()
+
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    main()  # pragma: no cover
