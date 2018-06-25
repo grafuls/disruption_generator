@@ -30,13 +30,13 @@ def main(experiments_path):
     click.echo("!!! DISRUPTION AS A SERVICE !!!")
     click.echo("!!!    USE WITH CAUTION     !!!")
     try:
-        _loop = asyncio.get_event_loop()
-        _loop.run_until_complete(execute(experiments_path, _loop))
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(execute(experiments_path))
     except (OSError, asyncssh.Error) as exc:
         sys.exit("SSH connection failed: " + str(exc))
 
 
-async def execute(experiments_path, _loop):
+async def execute(experiments_path):
     _files = []
     for (dirpath, dirnames, filenames) in walk(experiments_path):
         for file in filenames:

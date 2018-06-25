@@ -20,7 +20,7 @@ class Alistener(object):
     async def run_client(self, filepath, expression, timeout):
         async with await asyncssh.connect(self.hostname) as conn:
             logger.debug("Connected to %s", self.hostname)
-            stdin, stdout, stderr = await conn.open_session("tail -f %s" % filepath)
+            stdin, stdout, stderr = await conn.open_session("tail -F %s" % filepath)
             start = time.time()
             while time.time() - start < timeout:
                 output = await stdout.readline()

@@ -1,6 +1,6 @@
 ---
 - disrupt_action:
-    - name: Kill services on VM start
+    - name: Restart syslog on regex ocurrance
       listener:
         re: mutaki
         log: /tmp/pinglocal
