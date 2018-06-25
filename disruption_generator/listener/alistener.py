@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
 import asyncssh
 import re
-import time
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,17 +21,21 @@ class Alistener(object):
         async with await asyncssh.connect(self.hostname) as conn:
             logger.debug("Connected to %s", self.hostname)
             stdin, stdout, stderr = await conn.open_session("tail -F %s" % filepath)
-            start = time.time()
-            while time.time() - start < timeout:
-                output = await stdout.readline()
-                m = re.search(expression, output)
-                if m and m.group(0):
-                    logger.debug("Found occurrance: %s", output)
-                    stdin.write("\x03")
-                    return True
-            logger.debug("Found no results")
-            stdin.write("\x03")
-            return False
+
+            async def match():
+                while True:
+                    output = await stdout.readline()
+                    m = re.search(expression, output)
+                    if m and m.group(0):
+                        logger.debug("Found occurrance: %s", output)
+                        stdin.write("\x03")
+                        return True
+
+            try:
+                return await asyncio.wait_for(match(), timeout)
+            except asyncio.TimeoutError:
+                logger.debug("Found no results")
+                return False
 
     async def tail(self, filepath, expression, timeout=3):
         if not filepath.lower() in self.files:
