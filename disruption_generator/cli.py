@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 @click.option(
     "--experiments-path",
     "-e",
-    type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True),
+    type=click.Path(
+        exists=True, file_okay=False, readable=True, resolve_path=True
+    ),
     help="Path to experiments yamls",
     default="./experiments/",
 )
@@ -48,7 +50,7 @@ async def execute(experiments_path):
         scenario = _parser.parse()
         _scenarios.extend(scenario)
     for scenario in _scenarios:
-        click.echo("Scenario: %s" % scenario)
+        click.echo("Scenario: %s" % scenario.name)
         alistener = Alistener(scenario.listener.target)
 
         for action in scenario.actions:
