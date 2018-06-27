@@ -87,7 +87,7 @@ class ExperimentParser(object):
                 )
             )
 
-        _disruptions = []
+        _scenarios = []
         for disrupt_action in doc:
             name = disrupt_action[config.DISRUPT_ACTION_STR][0][config.NAME_STR]
             listener = _init_listener(
@@ -99,6 +99,6 @@ class ExperimentParser(object):
 
             disruption = Disruption(name=name, listener=listener, actions=actions)
 
-            _disruptions.append(disruption)
+            _scenarios.append(disruption)
 
-        return _disruptions
+        return _scenarios

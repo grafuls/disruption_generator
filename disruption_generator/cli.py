@@ -41,9 +41,9 @@ def main(experiments_path):
 async def execute(experiments_path):
     _files = []
     for (dirpath, dirnames, filenames) in walk(experiments_path):
-        for file in filenames:
-            _files.append(path.join(dirpath, file))
-        break  # Get's only root level directory files
+        for _file in filenames:
+            _files.append(path.join(dirpath, _file))
+        break  # Gets only root level directory files
     _scenarios = []
     for _file in _files:
         _parser = ExperimentParser(yaml_path=_file)
@@ -59,6 +59,7 @@ async def execute(experiments_path):
             )
 
             if result:
+                click.echo("Triggering: %s" % action.name)
                 trigger = Trigger(action)
                 try:
                     disruption = getattr(trigger, action.name)

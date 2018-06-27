@@ -1,14 +1,14 @@
 ---
 - disrupt_action:
-    - name: Restart syslog on regex ocurrance
+    - name: Restart sysstat on regex ocurrance
       listener:
-        re: mutaki
-        log: /tmp/pinglocal
+        re: FINISH
+        log: /var/log/vdsm/vdsm.log
         host: localhost
       trigger:
         - action:
             name: restart_service
-            params: syslog
+            params: sysstat
             target_host: localhost
             wait: 3
-            timeout: 3
+            timeout: 10

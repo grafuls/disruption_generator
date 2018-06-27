@@ -18,7 +18,7 @@ class Trigger(object):
         return self.__getattribute__(item)
 
     async def run_client(self, cmd):
-        async with await asyncssh.connect(self.action.target_host) as conn:
+        async with await asyncssh.connect(self.action.target_host, username="root") as conn:
             logger.debug("Connected to %s", self.action.target_host)
             logger.info("Running: '%s %s'" % (cmd, self.action.params))
             result = await conn.run("%s %s" % (cmd, self.action.params))

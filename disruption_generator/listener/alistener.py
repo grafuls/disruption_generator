@@ -18,7 +18,7 @@ class Alistener(object):
         self.files = []
 
     async def run_client(self, filepath, expression, timeout):
-        async with await asyncssh.connect(self.hostname) as conn:
+        async with await asyncssh.connect(self.hostname, username="root") as conn:
             logger.debug("Connected to %s", self.hostname)
             stdin, stdout, stderr = await conn.open_session("tail -F %s" % filepath)
 
@@ -27,7 +27,7 @@ class Alistener(object):
                     output = await stdout.readline()
                     m = re.search(expression, output)
                     if m and m.group(0):
-                        logger.debug("Found occurrance: %s", output)
+                        logger.debug("Found occurrence: %s", output)
                         stdin.write("\x03")
                         return True
 
