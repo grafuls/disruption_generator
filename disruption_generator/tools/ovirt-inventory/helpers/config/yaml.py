@@ -36,7 +36,8 @@ SUBTEMPLATES = {
         "template": "cluster",
         "additional": {
             "external_providers": {
-                "header": "external_network_providers", "template": "row_name3"
+                "header": "external_network_providers",
+                "template": "row_name3",
             }
         },
     },

@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
-
-# from disruption_generator.parsers.experiment_parser import ExperimentParser
-# _parser = ExperimentParser(yaml_path="disruption_generator/experiments/example.yaml")
+import sys
 
 """Main module."""
+
+
+async def main():
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -11,6 +11,7 @@ class RhvmApi:
     """
     Class that processes API calls
     """
+
     # dict with values for sections api, ssh and other
     config = None
     # part of url for api (with / in the end)
@@ -68,6 +69,7 @@ class ApiData:
     """
     Class that processes data from API
     """
+
     config = None
     server = ""
 
@@ -158,12 +160,10 @@ class ApiData:
         data_hosts = self.api.get("hosts")
         for host in data_hosts.get("host", []):
             try:
-                host["os_version"] = (
-                    "{os_type}-{major_ver}.{minor_ver}".format(
-                        os_type=host["os"]["type"],
-                        major_ver=host["os"]["version"]["major"],
-                        minor_ver=host["os"]["version"].get("minor", "x"),
-                    )
+                host["os_version"] = "{os_type}-{major_ver}.{minor_ver}".format(
+                    os_type=host["os"]["type"],
+                    major_ver=host["os"]["version"]["major"],
+                    minor_ver=host["os"]["version"].get("minor", "x"),
                 )
             except KeyError:
                 host["os_version"] = ""

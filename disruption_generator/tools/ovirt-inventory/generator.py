@@ -51,12 +51,14 @@ def get_data_storage(storages, storage_name):
 
 
 def get_storage(storage, storage_name, storage_for):
-    storage_details = [
-        "{storage_for}_storage_type={storage_type}",
-        "{storage_for}_storage_name={storage_name}",
-    ] if storage_for in (
-        "data", "hosted"
-    ) else []
+    storage_details = (
+        [
+            "{storage_for}_storage_type={storage_type}",
+            "{storage_for}_storage_name={storage_name}",
+        ]
+        if storage_for in ("data", "hosted")
+        else []
+    )
     if storage["type"] != "fcp":
         storage_details.append(
             "{storage_for}_storage_address={address}".format(
@@ -170,7 +172,6 @@ def generate_hosted_engine_inventory(data, hypervisors_line):
 
 
 def generate_inventory(data, inventory):
-
     def get_host_dict(h):
         return dict(h, nested=h.get("nested", False))
 

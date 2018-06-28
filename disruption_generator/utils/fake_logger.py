@@ -34,7 +34,9 @@ def generate_random_string(target_msg, max_length=80):
     max_length chars long.
     """
     random_str = target_msg
-    while target_msg in random_str:  # Make sure target_msg in not included in generated string
+    while (
+        target_msg in random_str
+    ):  # Make sure target_msg in not included in generated string
         random_chars = choices(
             string.ascii_letters + string.digits, k=randint(1, max_length)
         )
