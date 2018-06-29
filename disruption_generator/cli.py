@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 )
 @click.option(
     "--ssh-host-key",
-    "-s",
+    "-k",
     type=click.Path(
         exists=True, file_okay=True, readable=True, resolve_path=True
     ),
