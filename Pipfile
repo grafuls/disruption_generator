@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-ipython = "*"
 pip = "==9.0.1"
 bumpversion = "==0.5.3"
 wheel = "==0.30.0"
@@ -25,7 +24,6 @@ configparser = "*"
 pyyaml = "*"
 "jinja2" = "*"
 requests = "*"
-six = "*"
 "zope.interface" = "==4.4.3"
 attrs = "==17.4.0"
 click = ">=6.0"

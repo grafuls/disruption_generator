@@ -54,19 +54,29 @@ async def execute(experiments_path):
         alistener = Alistener(scenario.listener.target)
 
         for action in scenario.actions:
-            result = await alistener.tail(
-                scenario.listener.log, scenario.listener.re, action.timeout
-            )
+            click.echo("Iteration %s:" % i)
+            for i in range(scenario.listener.repeat):
+                click.echo("  Looking for: %s" % scenario.listener.re)
+                result = await alistener.tail(
+                    scenario.listener.log, scenario.listener.re, action.timeout
+                )
 
-            if result:
-                click.echo("Triggering: %s" % action.name)
-                trigger = Trigger(action)
-                try:
-                    disruption = getattr(trigger, action.name)
-                except AssertionError as err:
-                    logger.info(err)
-                    return 1
-                await disruption()
+                if result:
+                    trigger = Trigger(action)
+                    try:
+                        disruption = getattr(trigger, action.name)
+                    except AssertionError as err:
+                        logger.info(err)
+                        return 1
+                    disrupted = await disruption()
+
+                    if disrupted:
+                        click.echo("    Success")
+                    else:
+                        click.echo("    Failed")
+
+                else:
+                    click.echo("  Not Found")
 
     return 0
 

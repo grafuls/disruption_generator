@@ -5,6 +5,7 @@
         re: FINISH
         log: /var/log/vdsm/vdsm.log
         host: localhost
+        repeat: 3
       trigger:
         - action:
             name: restart_service

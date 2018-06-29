@@ -32,7 +32,6 @@ REQUIRED = [
     "pyyaml",
     "jinja2",
     "requests",
-    "six",
     "zope.interface",
     "attrs",
     "asyncio",
