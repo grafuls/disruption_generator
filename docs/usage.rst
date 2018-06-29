@@ -2,6 +2,14 @@
 Usage
 =====
 
-To use Disruption Generator in a project::
+To use Disruption Generator::
 
-    import disruption_generator
+    Usage: disruption_generator [OPTIONS]
+        Console script for disruption_generator.
+
+    Options:
+        -e, --experiments-path DIRECTORY
+                                        Path to experiments yamls
+        --version                       Show the version and exit.
+        --help                          Show this message and exit.
+

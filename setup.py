@@ -22,7 +22,7 @@ URL = "https://github.com/grafuls/disruption_generator"
 EMAIL = "grafuls@gmail.com"
 AUTHOR = "Gonzalo Rafuls"
 REQUIRES_PYTHON = ">=3.5.0"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 # What packages are required for this module to be executed?
 REQUIRED = [
