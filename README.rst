@@ -35,7 +35,7 @@ Providing an extendable and easy to use tool for developers and QE to ensure the
 Features
 --------
 
-* :sparkles: Async all the things via asyncio and asyncssh
+* Async all the things via asyncio and asyncssh
 
 * Easy disruptive scenarios definitions via yaml files
 
