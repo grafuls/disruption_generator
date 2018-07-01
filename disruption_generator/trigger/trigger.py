@@ -1,7 +1,8 @@
+import asyncio
 import asyncssh
 import logging
 
-ALL_ACTIONS = ["restart_service"]
+ALL_ACTIONS = ["restart_service", "latency"]
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,31 @@ class Trigger(object):
                 return False
 
     async def restart_service(self):
+        """
+        Restart a service on a remote host
+
+        Returns:
+            result (bool): Result of the restart
+        """
         cmd = "systemctl restart"
         result = await self.run_client(cmd)
+        return result
+
+    async def latency(self):
+        """
+        Add latency to a remote hosts link
+
+        Returns:
+            result (bool): True if successful, False otherwise
+        """
+        cmd_add = "tc qdisc add dev eth0 root netem delay"
+        cmd_del = "tc qdisc del dev eth0 root netem delay"
+        result = await self.run_client(cmd_add)
+        wait = self.action.wait if self.action.wait else 10
+        await asyncio.sleep(wait)
+        if result:
+            rollback = await self.run_client(cmd_del)
+            if not rollback:
+                logger.info("Rollback was not successful")
+
         return result

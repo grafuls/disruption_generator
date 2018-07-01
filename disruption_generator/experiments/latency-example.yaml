@@ -1,0 +1,14 @@
+---
+- disrupt_action:
+    - name: Restart sysstat on regex ocurrance
+      listener:
+        re: FINISH
+        log: /var/log/vdsm/vdsm.log
+        host: localhost
+      trigger:
+        - action:
+            name: latency
+            params: 100ms
+            target_host: localhost
+            wait: 3
+            timeout: 10
