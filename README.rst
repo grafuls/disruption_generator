@@ -42,3 +42,5 @@ Features
 * Tail remote log files and search for regular expressions
 
 * Event driven disruptive actions trigger
+  - Service restart
+  - Inject network latency
