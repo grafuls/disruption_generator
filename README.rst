@@ -35,12 +35,14 @@ Providing an extendable and easy to use tool for developers and QE to ensure the
 Features
 --------
 
-* Async all the things via asyncio and asyncssh
+- Async all the things via asyncio and asyncssh
 
-* Easy disruptive scenarios definitions via yaml files
+- Easy disruptive scenarios definitions via yaml files
 
-* Tail remote log files and search for regular expressions
+- Tail remote log files and search for regular expressions
 
-* Event driven disruptive actions trigger
+- Event driven disruptive actions trigger
+
   - Service restart
+
   - Inject network latency
