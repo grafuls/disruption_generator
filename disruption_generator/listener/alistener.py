@@ -14,8 +14,10 @@ class AlistenerException(Exception):
 
 
 class Alistener(object):
-    def __init__(self, hostname, ssh_host_key):
+    def __init__(self, hostname, username, password, ssh_host_key):
         self.hostname = hostname
+        self.username = username
+        self.password = password
         self.ssh_host_key = ssh_host_key
         self.files = []
 
@@ -24,8 +26,9 @@ class Alistener(object):
             SSHClient,
             host=self.hostname,
             known_hosts=None,
+            username=self.username,
+            password=self.password,
             client_keys=self.ssh_host_key,
-            username="root",
         )
         async with conn:
             logger.debug("Connected to %s", self.hostname)

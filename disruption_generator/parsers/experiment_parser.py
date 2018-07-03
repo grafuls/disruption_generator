@@ -10,6 +10,10 @@ from zope.interface import implementer
 logger = logging.getLogger(__name__)
 
 
+class ParserException(Exception):
+    pass
+
+
 class IParser(zope.interface.Interface):
     """
     Parser for experiments with disruptive actions definitions.
@@ -40,11 +44,24 @@ class ExperimentParser(object):
                 Listener: object with listener info
             """
 
-            re = element_listener["re"]
-            log_file = element_listener["log"]
-            host = element_listener["host"]
-            _listener = Listener(re=re, log=log_file, target=host)
-            return _listener
+            try:
+                regex = element_listener[config.REGEX_KEY]
+                log_file = element_listener[config.LOG_KEY]
+                host = element_listener[config.HOST_KEY]
+                username = element_listener[config.USERNAME_KEY]
+                password = element_listener[config.PASSWORD_KEY]
+                _listener = Listener(
+                    regex=regex,
+                    log=log_file,
+                    target=host,
+                    username=username,
+                    password=password,
+                )
+                return _listener
+            except KeyError as ex:
+                raise ParserException(
+                    "Missing %s definition from listener section", ex
+                )
 
         def _init_actions(element_trigger):
             """
@@ -58,21 +75,30 @@ class ExperimentParser(object):
 
             _actions = []
             for trigger in element_trigger:
-                key = "action"
-                _name = trigger[key][config.NAME_STR]
-                params = trigger[key]["params"]
-                target_host = trigger[key]["target_host"]
-                wait = trigger[key]["wait"]
-                timeout = trigger[key]["timeout"]
+                try:
+                    key = config.ACTION_KEY
+                    _name = trigger[key][config.NAME_KEY]
+                    params = trigger[key][config.PARAMS_KEY]
+                    target_host = trigger[key][config.TARGET_HOST_KEY]
+                    username = trigger[key][config.USERNAME_KEY]
+                    password = trigger[key][config.PASSWORD_KEY]
+                    wait = trigger[key][config.WAIT_KEY]
+                    timeout = trigger[key][config.TIMEOUT_KEY]
 
-                trigger = Action(
-                    name=_name,
-                    params=params,
-                    target_host=target_host,
-                    wait=wait,
-                    timeout=timeout,
-                )
-                _actions.append(trigger)
+                    trigger = Action(
+                        name=_name,
+                        params=params,
+                        target_host=target_host,
+                        username=username,
+                        password=password,
+                        wait=wait,
+                        timeout=timeout,
+                    )
+                    _actions.append(trigger)
+                except KeyError as ex:
+                    raise ParserException(
+                        "Missing %s definition from action section", ex
+                    )
             return _actions
 
         doc = None
@@ -89,15 +115,23 @@ class ExperimentParser(object):
 
         _scenarios = []
         for disrupt_action in doc:
-            name = disrupt_action[config.DISRUPT_ACTION_STR][0][config.NAME_STR]
+            name = disrupt_action[config.DISRUPT_ACTION_KEY][0][
+                config.NAME_KEY
+            ]
             listener = _init_listener(
-                disrupt_action[config.DISRUPT_ACTION_STR][0][config.LISTENER_STR]
+                disrupt_action[config.DISRUPT_ACTION_KEY][0][
+                    config.LISTENER_KEY
+                ]
             )
             actions = _init_actions(
-                disrupt_action[config.DISRUPT_ACTION_STR][0][config.TRIGGER_STR]
+                disrupt_action[config.DISRUPT_ACTION_KEY][0][
+                    config.TRIGGER_KEY
+                ]
             )
 
-            disruption = Disruption(name=name, listener=listener, actions=actions)
+            disruption = Disruption(
+                name=name, listener=listener, actions=actions
+            )
 
             _scenarios.append(disruption)
 

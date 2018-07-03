@@ -54,7 +54,7 @@ async def execute(experiments_path, ssh_host_key):
         _files = [
             path.join(dirpath, _file)
             for _file in filenames
-            if _file.endswith(".yaml")
+            if _file.endswith((".yaml", ".yml"))
         ]
         break  # Gets only root level directory files
     _scenarios = []
@@ -64,7 +64,12 @@ async def execute(experiments_path, ssh_host_key):
         _scenarios.extend(scenario)
     for scenario in _scenarios:
         click.echo("Scenario: %s" % scenario.name)
-        alistener = Alistener(scenario.listener.target, ssh_host_key)
+        alistener = Alistener(
+            scenario.listener.target,
+            scenario.listener.username,
+            scenario.listener.password,
+            ssh_host_key,
+        )
 
         for action in scenario.actions:
             result = await alistener.tail(
@@ -73,11 +78,14 @@ async def execute(experiments_path, ssh_host_key):
 
             if result:
                 click.echo("Triggering: %s" % action.name)
-                trigger = Trigger(action, ssh_host_key)
+                _username = action.username if action.username else "root"
+                trigger = Trigger(
+                    action, _username, action.password, ssh_host_key
+                )
                 try:
                     disruption = getattr(trigger, action.name)
                 except AssertionError as err:
-                    logger.info(err)
+                    logger.error(err)
                     return 1
                 await disruption()
 

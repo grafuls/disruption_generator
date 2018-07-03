@@ -8,8 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class Trigger(object):
-    def __init__(self, action, ssh_host_key):
+    def __init__(self, action, username, password, ssh_host_key):
         self.action = action
+        self.username = username
+        self.password = password
         self.ssh_host_key = ssh_host_key
 
     def __getattr__(self, item):
@@ -25,8 +27,9 @@ class Trigger(object):
             SSHClient,
             host=self.action.target_host,
             known_hosts=None,
+            username=self.username,
+            password=self.password,
             client_keys=self.ssh_host_key,
-            username="root",
         )
 
         async with conn:
