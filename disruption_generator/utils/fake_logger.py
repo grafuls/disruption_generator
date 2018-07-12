@@ -59,8 +59,8 @@ def main():
         "--append",
         action="store_true",
         default=False,
-        help="If set to true and file specified in --log-fine already exists,"
-        "new lines will be appened to end of the file.",
+        help="If set to true and file specified in --log-file already exists,"
+        " new lines will be appended at the end of the file.",
     )
     parser.add_argument(
         "-m",
@@ -69,17 +69,17 @@ def main():
         default=1,
         type=int,
         help="How long should the interval between log messages be in seconds."
-        "If used with --randomize, this will be the highest possible value"
-        "of randomly generated number.",
+        " If used with --randomize, this will be the highest possible value"
+        " of randomly generated number.",
     )
     parser.add_argument(
         "-r",
         "--randomize",
         action="store_true",
         default=False,
-        help="If this is set to true, the number of seconds between log messages"
-        "will be generated randomly with minimum value 0 and maximum value"
-        "specified in --max-interval.",
+        help="If set to true, the number of seconds between log messages"
+        " will be generated randomly with minimum value of 0 and maximum value"
+        " specified in --max-interval.",
     )
     parser.add_argument(
         "-t",
@@ -87,7 +87,7 @@ def main():
         action="store",
         default=TARGET_MSG,
         help="Message that will be eventually sent to the log file once time "
-        "specified in --seconds has passed.",
+        " specified in --seconds has passed.",
     )
     parser.add_argument(
         "-s",
@@ -96,9 +96,9 @@ def main():
         default=5,
         type=int,
         help="Target message will be sent to the log file in the next iteration"
-        "after this many seconds have passed. If you set it to 0, target"
-        "message will never be sent unless you interrput script execution"
-        "by pressing Ctrl+C.",
+        " after this many seconds have passed. If set to 0, the target"
+        " message will never be sent unless script execution is interrupted"
+        " by pressing Ctrl+C.",
     )
 
     args = parser.parse_args()
