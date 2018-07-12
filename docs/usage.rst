@@ -13,3 +13,7 @@ To use Disruption Generator::
         --version                       Show the version and exit.
         --help                          Show this message and exit.
 
+
+Custom configuration options can be found in top-level config.py:
+
+- EXPERIMENTS_DIR can be used to point to a custom experiments directory

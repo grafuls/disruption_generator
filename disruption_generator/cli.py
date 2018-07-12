@@ -8,8 +8,9 @@ import click
 import logging
 
 from . import __version__
-from .parsers.experiment_parser import ExperimentParser
+from .config import EXPERIMENTS_DIR
 from .listener.alistener import Alistener
+from .parsers.experiment_parser import ExperimentParser
 from .trigger.trigger import Trigger
 from os import walk, path
 
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
         exists=True, file_okay=False, readable=True, resolve_path=True
     ),
     help="Path to experiments yamls",
-    default="./experiments/",
+    default=EXPERIMENTS_DIR,
 )
 @click.version_option(version=__version__)
 def main(experiments_path):
