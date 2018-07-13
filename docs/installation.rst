@@ -23,7 +23,7 @@ system, or shipped in an old version, and we will make use of it during developm
 For more info on how to start with development, go ahead to our :ref:`getting-started-label` guide.
 
 From sources
-------------
+============
 
 The sources for Disruption Generator can be downloaded from the `Github repo`_.
 
