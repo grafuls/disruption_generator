@@ -48,7 +48,7 @@ def main(experiments_path, ssh_host_key):
 
 
 async def execute(experiments_path, ssh_host_key):
-    ssh_host_key = [ssh_host_key] if ssh_host_key else ssh_host_key
+    ssh_host_key = ssh_host_key or [ssh_host_key]
     _files = []
     for (dirpath, dirnames, filenames) in walk(experiments_path):
         _files = [
@@ -56,6 +56,17 @@ async def execute(experiments_path, ssh_host_key):
             for _file in filenames
             if _file.endswith((".yaml", ".yml"))
         ]
+        _ignored = [
+            path.join(dirpath, _file)
+            for _file in filenames
+            if not _file.endswith((".yaml", ".yml"))
+        ]
+        if _ignored:
+            logger.debug(
+                "The following files where found but ignored: {}".format(
+                    _ignored
+                )
+            )
         break  # Gets only root level directory files
     _scenarios = []
     for _file in _files:

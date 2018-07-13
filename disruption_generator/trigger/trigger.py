@@ -15,9 +15,8 @@ class Trigger(object):
         self.ssh_host_key = ssh_host_key
 
     def __getattr__(self, item):
-        attr_err_msg = (
-            "Unexpected disruptive action other than %s"
-            % ", ".join(ALL_ACTIONS)
+        attr_err_msg = "Unexpected disruptive action other than {}".format(
+            ", ".join(ALL_ACTIONS)
         )
         assert item in ALL_ACTIONS, attr_err_msg
         return self.__getattribute__(item)

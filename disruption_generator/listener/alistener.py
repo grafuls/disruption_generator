@@ -33,7 +33,7 @@ class Alistener(object):
         async with conn:
             logger.debug("Connected to %s", self.hostname)
             stdin, stdout, stderr = await conn.open_session(
-                "tail -F %s" % filepath
+                "tail -F {}".format(filepath)
             )
 
             async def match():

@@ -50,18 +50,18 @@ class ExperimentParser(object):
                 host = element_listener[config.HOST_KEY]
                 username = element_listener[config.USERNAME_KEY]
                 password = element_listener[config.PASSWORD_KEY]
-                _listener = Listener(
-                    regex=regex,
-                    log=log_file,
-                    target=host,
-                    username=username,
-                    password=password,
-                )
-                return _listener
             except KeyError as ex:
                 raise ParserException(
-                    "Missing %s definition from listener section", ex
+                    "Missing {} definition from listener section".format(ex)
                 )
+            _listener = Listener(
+                regex=regex,
+                log=log_file,
+                target=host,
+                username=username,
+                password=password,
+            )
+            return _listener
 
         def _init_actions(element_trigger):
             """
@@ -85,7 +85,7 @@ class ExperimentParser(object):
                     wait = trigger[key][config.WAIT_KEY]
                     timeout = trigger[key][config.TIMEOUT_KEY]
 
-                    trigger = Action(
+                    action = Action(
                         name=_name,
                         params=params,
                         target_host=target_host,
@@ -94,7 +94,7 @@ class ExperimentParser(object):
                         wait=wait,
                         timeout=timeout,
                     )
-                    _actions.append(trigger)
+                    _actions.append(action)
                 except KeyError as ex:
                     raise ParserException(
                         "Missing %s definition from action section", ex
