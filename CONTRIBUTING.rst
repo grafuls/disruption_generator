@@ -116,6 +116,11 @@ Before you submit a pull request, check that it meets these guidelines:
 
    .. warning:: Pull requests that are not prefixed with [RFR] will be ignored!
 
+Code Style
+----------
+
+We of course stick to PEP8 recommendations. Max line length is 120 characters.
+
 Tips
 ----
 
