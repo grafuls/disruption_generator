@@ -51,7 +51,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 disruption_generator tests
+	pipenv run flake8 disruption_generator tests
 
 test: ## run tests quickly with the default Python
 	pipenv run py.test tests
@@ -75,6 +75,9 @@ docs: ## generate Sphinx HTML documentation, including API docs
 
 servedocs: docs ## compile the docs watching for changes
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+
+docker: ## generate docker container
+	docker build -t disruption_generator .
 
 release: dist ## package and upload a release
 	twine upload dist/*

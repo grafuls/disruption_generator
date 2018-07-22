@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import asyncssh
 import re
 import logging
+
+from asyncssh import SSHClient, create_connection
 
 logger = logging.getLogger(__name__)
 
@@ -13,14 +14,27 @@ class AlistenerException(Exception):
 
 
 class Alistener(object):
-    def __init__(self, hostname):
+    def __init__(self, hostname, username, password, ssh_host_key):
         self.hostname = hostname
+        self.username = username
+        self.password = password
+        self.ssh_host_key = ssh_host_key
         self.files = []
 
     async def run_client(self, filepath, expression, timeout):
-        async with await asyncssh.connect(self.hostname, username="root") as conn:
+        conn, client = await create_connection(
+            SSHClient,
+            host=self.hostname,
+            known_hosts=None,
+            username=self.username,
+            password=self.password,
+            client_keys=self.ssh_host_key,
+        )
+        async with conn:
             logger.debug("Connected to %s", self.hostname)
-            stdin, stdout, stderr = await conn.open_session("tail -F %s" % filepath)
+            stdin, stdout, stderr = await conn.open_session(
+                "tail -F {}".format(filepath)
+            )
 
             async def match():
                 while True:

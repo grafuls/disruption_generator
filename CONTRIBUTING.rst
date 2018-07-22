@@ -54,6 +54,8 @@ If you are proposing a feature:
 * Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
 
+.. _getting-started-label:
+
 Get Started!
 ------------
 
@@ -106,6 +108,18 @@ Before you submit a pull request, check that it meets these guidelines:
 3. The pull request should work for Python 3.5 and 3.6. Check
    https://travis-ci.org/grafuls/disruption_generator/pull_requests
    and make sure that the tests pass for all supported Python versions.
+4. Finally, before you submit your pull request, make sure its name is prefixed
+   either with:
+
+   * [WIP] tag if you still intend to work on it or
+   * [RFR] tag if it is ready to be reviewed by other contributors.
+
+   .. warning:: Pull requests that are not prefixed with [RFR] will be ignored!
+
+Code Style
+----------
+
+We of course stick to PEP8 recommendations. Max line length is 120 characters.
 
 Tips
 ----

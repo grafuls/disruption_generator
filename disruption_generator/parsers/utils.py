@@ -11,6 +11,8 @@ class Action(object):
     name = attr.ib(validator=attr.validators.instance_of(six.text_type))
     params = attr.ib(validator=attr.validators.instance_of(six.text_type))
     target_host = attr.ib(validator=attr.validators.instance_of(six.text_type))
+    username = attr.ib(validator=attr.validators.instance_of(str))
+    password = attr.ib(validator=attr.validators.instance_of(str))
     wait = attr.ib(validator=attr.validators.instance_of(int))
     timeout = attr.ib(validator=attr.validators.instance_of(int))
 
@@ -21,9 +23,11 @@ class Listener(object):
     A listener object which holds necessary data for logs and triggers.
     """
 
-    re = attr.ib(validator=attr.validators.instance_of(six.text_type))
+    regex = attr.ib(validator=attr.validators.instance_of(six.text_type))
     log = attr.ib(validator=attr.validators.instance_of(six.text_type))
     target = attr.ib(validator=attr.validators.instance_of(six.text_type))
+    username = attr.ib(validator=attr.validators.instance_of(str))
+    password = attr.ib(validator=attr.validators.instance_of(str))
 
 
 @attr.s(hash=True)
