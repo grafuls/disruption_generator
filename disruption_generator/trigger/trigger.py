@@ -1,5 +1,6 @@
-import asyncssh
 import logging
+
+from asyncssh import SSHClient, create_connection
 
 ALL_ACTIONS = ["restart_service"]
 
@@ -7,18 +8,30 @@ logger = logging.getLogger(__name__)
 
 
 class Trigger(object):
-    def __init__(self, action):
+    def __init__(self, action, username, password, ssh_host_key):
         self.action = action
+        self.username = username
+        self.password = password
+        self.ssh_host_key = ssh_host_key
 
     def __getattr__(self, item):
-        attr_err_msg = "Unexpected disruptive action other than %s" % ", ".join(
-            ALL_ACTIONS
+        attr_err_msg = "Unexpected disruptive action other than {}".format(
+            ", ".join(ALL_ACTIONS)
         )
         assert item in ALL_ACTIONS, attr_err_msg
         return self.__getattribute__(item)
 
     async def run_client(self, cmd):
-        async with await asyncssh.connect(self.action.target_host, username="root") as conn:
+        conn, client = await create_connection(
+            SSHClient,
+            host=self.action.target_host,
+            known_hosts=None,
+            username=self.username,
+            password=self.password,
+            client_keys=self.ssh_host_key,
+        )
+
+        async with conn:
             logger.debug("Connected to %s", self.action.target_host)
             logger.info("Running: '%s %s'" % (cmd, self.action.params))
             result = await conn.run("%s %s" % (cmd, self.action.params))
