@@ -1,5 +1,5 @@
 Welcome to Disruption Generator's documentation!
-======================================
+================================================
 
 .. toctree::
    :maxdepth: 2
