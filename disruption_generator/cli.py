@@ -29,9 +29,7 @@ logger = logging.getLogger(__name__)
 @click.option(
     "--ssh-host-key",
     "-k",
-    type=click.Path(
-        exists=True, file_okay=True, readable=True, resolve_path=True
-    ),
+    type=click.Path(exists=True, file_okay=True, readable=True, resolve_path=True),
     help="File with SSH private key to use a server host key",
     default=None,
 )
@@ -52,23 +50,11 @@ async def execute(experiments_path, ssh_host_key):
     ssh_host_key = ssh_host_key or [ssh_host_key]
     _files = []
     for (dirpath, dirnames, filenames) in walk(experiments_path):
-        _files = [
-            path.join(dirpath, _file)
-            for _file in filenames
-            if _file.endswith((".yaml", ".yml"))
-        ]
+        _files = [path.join(dirpath, _file) for _file in filenames if _file.endswith((".yaml", ".yml"))]
         logger.debug("Experiment files to be parsed: {}".format(_files))
-        _ignored = [
-            path.join(dirpath, _file)
-            for _file in filenames
-            if not _file.endswith((".yaml", ".yml"))
-        ]
+        _ignored = [path.join(dirpath, _file) for _file in filenames if not _file.endswith((".yaml", ".yml"))]
         if _ignored:
-            logger.debug(
-                "The following files where found but ignored: {}".format(
-                    _ignored
-                )
-            )
+            logger.debug("The following files where found but ignored: {}".format(_ignored))
         break  # Gets only root level directory files
     _scenarios = []
     for _file in _files:
@@ -79,10 +65,7 @@ async def execute(experiments_path, ssh_host_key):
     for scenario in _scenarios:
         logger.info("Scenario: {}".format(scenario.name))
         alistener = Alistener(
-            scenario.listener.target,
-            scenario.listener.username,
-            scenario.listener.password,
-            ssh_host_key,
+            scenario.listener.target, scenario.listener.username, scenario.listener.password, ssh_host_key
         )
 
         for action in scenario.actions:
@@ -91,9 +74,7 @@ async def execute(experiments_path, ssh_host_key):
             if result:
                 logger.info("Triggering: {}".format(action.name))
                 _username = action.username if action.username else "root"
-                trigger = Trigger(
-                    action, _username, action.password, ssh_host_key
-                )
+                trigger = Trigger(action, _username, action.password, ssh_host_key)
                 try:
                     disruption = getattr(trigger, action.name)
                 except AssertionError as err:
