@@ -1,0 +1,41 @@
+# If you're not satisfied with the default values provided here,
+# you can create file called custom_logging.yaml in this directory.
+# In there, you can overwrite level setting for handlers and loggers.
+# Details: https://docs.python.org/3.7/library/logging.config.html#incremental-configuration
+# custom_logging.yaml must include incremental: True key-value pair.
+# See also custom_logging.example.yaml
+
+version: 1
+formatters:
+  simple:
+    datefmt: '%H:%M:%S'
+    format: '{asctime} [{levelname}] {message}'
+    style: '{'
+  detailed:
+    format: '{asctime} [{name}] [{levelname}] {message}'
+    style: '{'
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: simple
+    level: DEBUG
+  main_log_file:
+    class: logging.FileHandler
+    filename: log/disruption_generator.log
+    formatter: detailed
+    level: DEBUG
+loggers:
+  disruption_generator.cli:
+    level: DEBUG
+    handlers: [console, main_log_file]
+  disruption_generator.listener.alistener:
+    level: DEBUG
+    handlers: [console, main_log_file]
+  disruption_generator.parsers.experiment_parser:
+    level: DEBUG
+    handlers: [console, main_log_file]
+  disruption_generator.trigger.trigger:
+    level: DEBUG
+    handlers: [console, main_log_file]
+incremental: False
+disable_existing_loggers: True

@@ -109,3 +109,6 @@ Pipfile.lock
 development.cfg
 *.swp
 disruption_generator/tools/ovirt-inventory/inventory
+
+# User configuration
+disruption_generator/custom_logging.yaml
