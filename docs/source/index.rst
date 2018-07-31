@@ -5,16 +5,10 @@ Welcome to Disruption Generator's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   readme
+   Introduction <readme>
    installation
-   usage
-   modules
+   usage/usage
    contributing
+   utils
    authors
    history
-
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

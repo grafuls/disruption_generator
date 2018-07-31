@@ -48,6 +48,12 @@ def main(experiments_path, ssh_host_key):
 
 
 async def execute(experiments_path, ssh_host_key):
+    """Find, parse and execute experiments.
+
+    :param experiments_path: Path to directory with definitions of experiments.
+    :return: 0 on success, else 1.
+    :rtype: int
+    """
     ssh_host_key = ssh_host_key or [ssh_host_key]
     _files = []
     for (dirpath, dirnames, filenames) in walk(experiments_path):
