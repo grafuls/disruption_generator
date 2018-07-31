@@ -7,8 +7,8 @@ Welcome to Disruption Generator's documentation!
 
    Introduction <readme>
    installation
-   usage/usage
+   usage
    contributing
-   utils
+   faq
    authors
    history
