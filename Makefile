@@ -86,7 +86,7 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	pip install pipenv
-	PIPENV_IGNORE_VIRTUALENVS=1 pipenv install --dev
+	PIPENV_IGNORE_VIRTUALENVS=1 pipenv install --dev --skip-lock
 	pipenv run python setup.py install
 
 init:
