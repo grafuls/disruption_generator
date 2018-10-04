@@ -126,4 +126,14 @@ Tips
 
 To run a subset of tests::
 
-$ py.test tests.test_disruption_generator
+   $ py.test tests.test_disruption_generator
+
+To build documentation locally::
+
+   $ make docs
+
+You can also let the docs be built dynamically while working on them.
+You can see sphinx output in console and you can see your changes straight away in browser (that is after you hit
+refresh button). You can achieve this by::
+
+   $ make servedocs
